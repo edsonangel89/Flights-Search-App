@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Flights Search App</string>
+    <string name="search_label">Search for airports...</string>
+    <string name="search_button">Search flights</string>
+</resources>
