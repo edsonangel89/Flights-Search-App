@@ -1,12 +1,13 @@
 package com.example.flightssearchapp.ui.components
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -28,12 +29,12 @@ fun FlightCardsList(
     flightStates: MutableList<Boolean>,
     vm: SearchViewModel
 ) {
-    LazyColumn {
-        itemsIndexed(flightList) { index, flight ->
-            Box{
-                FlightCard(flight = flight)
-                FlightCardState(flightState = flightStates[index],changeState = { vm.updateState(index) })
-            }
+    LazyRow {
+        /*items(flightList) { flight ->
+            FlightCard(flight = flight)
+        }*/
+        itemsIndexed(flightStates) { index, state ->
+            FlightCardState(flightState = state, changeState = { vm.updateState(index) } )
         }
     }
 }

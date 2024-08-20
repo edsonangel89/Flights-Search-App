@@ -40,24 +40,24 @@ class SearchViewModel(
 
     var posibleFlightsList: MutableList<Flight> = mutableListOf()
 
-    /*var flightStates: MutableList<Boolean> = mutableListOf()*/
+    var flightStates: MutableList<Boolean> = mutableListOf()
 
-    private val _flightStates = MutableStateFlow<MutableList<Boolean>>(mutableListOf())
-    val flightStates: StateFlow<MutableList<Boolean>> = _flightStates.asStateFlow()
+    /*private val _flightStates = MutableStateFlow<MutableList<Boolean>>(mutableListOf())
+    val flightStates: StateFlow<MutableList<Boolean>> = _flightStates.asStateFlow()*/
 
     fun updateState(ind: Int) {
         /*viewModelScope.launch {*/
-            val cList = _flightStates.value ?: return
+            /*val cList = flightStates ?: return
             cList[ind] = !cList[ind]
-            _flightStates.value = cList
-            _flightStates.update { cState ->
+            flightStates = cList*/
+            /*flightStates.update { cState ->
                 cState
-            }
+            }*/
 
-            /*Log.d("UPDATESTATE", flightStates[ind].toString())
+            Log.d("UPDATESTATE", flightStates[ind].toString())
             flightStates[ind] = !flightStates[ind]
             Log.d("UPDATESTATE", flightStates[ind].toString())
-            Log.d("STATES", flightStates.toString())*/
+            Log.d("STATES", flightStates.toString())
         /*}*/
     }
 
@@ -141,16 +141,14 @@ class SearchViewModel(
                 flightsList.forEach {
                     val flight = Flight(id = id, departure = airport, arrive = it)
                     posibleFlights.add(flight)
-                    _flightStates.value?.add(flight.likeState)
+                    flightStates.add(flight.likeState)
                     id++
                 }
             }
             else {
                 Log.d("AIRPORT",airport.toString())
             }
-
-            /*flightStates.value = fStates*/
-            /*_flightStates.update { cState -> posibleFlights }*/
+            flightStates = fStates
             posibleFlightsList = posibleFlights
             Log.d("FSTATE", flightStates.toString())
             Log.d("PLIST", posibleFlightsList.toString())

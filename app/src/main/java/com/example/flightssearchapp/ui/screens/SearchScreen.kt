@@ -77,7 +77,7 @@ fun SearchForm(
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
     var posibleFlights = vm.posibleFlightsList
-    val iconStates by vm.flightStates.collectAsState()
+    var iconStates = vm.flightStates
 
     Column(
         verticalArrangement = Arrangement.Center,
