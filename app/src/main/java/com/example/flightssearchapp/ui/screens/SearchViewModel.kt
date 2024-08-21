@@ -35,30 +35,15 @@ class SearchViewModel(
     var airportListLocal: MutableList<Pair<String, String>> = mutableListOf()
     var airportSearches: List<Pair<String, String>> = mutableListOf()
 
-    val _airportList = MutableStateFlow<List<Airport>>(emptyList())
-    val airportListList: List<Pair<Airport, Airport>> = mutableListOf()
-
     var posibleFlightsList: MutableList<Flight> = mutableListOf()
 
     var flightStates: MutableList<Boolean> = mutableListOf()
 
-    /*private val _flightStates = MutableStateFlow<MutableList<Boolean>>(mutableListOf())
-    val flightStates: StateFlow<MutableList<Boolean>> = _flightStates.asStateFlow()*/
-
     fun updateState(ind: Int) {
-        /*viewModelScope.launch {*/
-            /*val cList = flightStates ?: return
-            cList[ind] = !cList[ind]
-            flightStates = cList*/
-            /*flightStates.update { cState ->
-                cState
-            }*/
-
-            Log.d("UPDATESTATE", flightStates[ind].toString())
-            flightStates[ind] = !flightStates[ind]
-            Log.d("UPDATESTATE", flightStates[ind].toString())
-            Log.d("STATES", flightStates.toString())
-        /*}*/
+        viewModelScope.launch {
+            posibleFlightsList[ind].likeState = !posibleFlightsList[ind].likeState
+            posibleFlightsList = posibleFlightsList
+        }
     }
 
     var id: Int = 0
@@ -83,7 +68,6 @@ class SearchViewModel(
             }
             else {
                 airportSearches = searchLocal(search, airportListLocal)
-                Log.d("LIST", airportSearches.toString())
             }
         }
 
@@ -94,8 +78,6 @@ class SearchViewModel(
         if(searchSplit.size == 2) {
             var search1 = searchSplit[0]
             var search2 = searchSplit[1]
-            Log.d("SEARCH 1", search1)
-            Log.d("SEARCH 2", search2)
             list.forEach { elem ->
                 val elemFLocal = elem.first.lowercase()
                 val elemSLocal = elem.second.lowercase()
@@ -146,12 +128,10 @@ class SearchViewModel(
                 }
             }
             else {
-                Log.d("AIRPORT",airport.toString())
+
             }
             flightStates = fStates
             posibleFlightsList = posibleFlights
-            Log.d("FSTATE", flightStates.toString())
-            Log.d("PLIST", posibleFlightsList.toString())
         }
     }
 

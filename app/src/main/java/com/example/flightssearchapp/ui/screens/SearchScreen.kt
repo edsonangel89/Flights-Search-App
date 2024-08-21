@@ -24,7 +24,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,6 +49,7 @@ fun SearchScreen(
     value: String,
     onValueChange: (String) -> Unit,
     vm: SearchViewModel,
+    navigate: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box (
@@ -59,7 +59,8 @@ fun SearchScreen(
             label = label,
             value = value,
             onValueChange = onValueChange,
-            vm = vm
+            vm = vm,
+            navigate = navigate
         )
     }
 }
@@ -69,6 +70,7 @@ fun SearchForm(
     @StringRes label: Int,
     value: String,
     onValueChange: (String) -> Unit,
+    navigate: () -> Unit,
     vm: SearchViewModel = viewModel()
 ) {
     var textF by remember { mutableStateOf(TextFieldValue(vm.airId)) }
@@ -86,7 +88,6 @@ fun SearchForm(
             .fillMaxSize()
     ) {
         Spacer(modifier = Modifier.height(40.dp))
-
         OutlinedTextField(
             label = { Text(text = stringResource(label)) },
             value = textF,
@@ -122,6 +123,7 @@ fun SearchForm(
                         vm.posibleFlights(textF.text)
                         textF = TextFieldValue("")
                         onValueChange("")
+                        navigate.invoke()
                     }
                 )
                 {
@@ -165,7 +167,7 @@ fun SearchForm(
                 if (optionsList.isEmpty()) {
                     FlightCardsList(
                         flightList = posibleFlights,
-                        flightStates =  iconStates,
+                        flightStates = iconStates,
                         vm = vm
                     )
                 }

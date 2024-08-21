@@ -29,19 +29,17 @@ fun FlightCardsList(
     flightStates: MutableList<Boolean>,
     vm: SearchViewModel
 ) {
-    LazyRow {
-        /*items(flightList) { flight ->
-            FlightCard(flight = flight)
-        }*/
-        itemsIndexed(flightStates) { index, state ->
-            FlightCardState(flightState = state, changeState = { vm.updateState(index) } )
+    LazyColumn {
+        itemsIndexed(flightList) {index, flight ->
+            FlightCard(flight = flight, vm = vm)
         }
     }
 }
 
 @Composable
 fun FlightCard(
-    flight: Flight
+    flight: Flight,
+    vm: SearchViewModel
 ) {
     Row(modifier = Modifier
         .fillMaxWidth()
@@ -54,6 +52,24 @@ fun FlightCard(
             Text(text = flight.arrive.iataCode)
             Text(text = flight.arrive.name)
         }
+        IconButton(
+            onClick = { vm.updateState(flight.id) },
+            modifier = Modifier.fillMaxWidth(0.5f)
+        ) {
+            if(flight.likeState) {
+                Icon(
+                    imageVector = Icons.Filled.Favorite,
+                    contentDescription = null
+                )
+            }
+            else {
+                Icon(
+                    imageVector = Icons.Outlined.FavoriteBorder,
+                    contentDescription = null
+                )
+            }
+        }
+
     }
 }
 
