@@ -1,10 +1,13 @@
 package com.example.flightssearchapp.ui.screens
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -60,7 +63,11 @@ fun SearchScreen(
             value = value,
             onValueChange = onValueChange,
             vm = vm,
-            navigate = navigate
+            navigate = {
+                Log.d("SEARCHFORM", "TEST")
+                navigate.invoke()
+                Log.d("SEARCHFORM", "TEST")
+            }
         )
     }
 }
@@ -79,100 +86,90 @@ fun SearchForm(
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
     var posibleFlights = vm.posibleFlightsList
-    var iconStates = vm.flightStates
+    var iconStates by remember { mutableStateOf(vm.flightStates) }
 
     Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
+        /*horizontalAlignment = Alignment.CenterHorizontally*/
         modifier = Modifier
             .fillMaxSize()
     ) {
         Spacer(modifier = Modifier.height(40.dp))
-        OutlinedTextField(
-            label = { Text(text = stringResource(label)) },
-            value = textF,
-            shape = RoundedCornerShape(8.dp),
-            onValueChange = {
-                coroutine.launch {
-                    if (it.text.isEmpty()) {
-                        onValueChange("")
-                        textF = it
-                    } else {
-                        onValueChange(it.text)
-                        textF = it
+        Row(modifier = Modifier) {
+            OutlinedTextField(
+                label = { Text(text = stringResource(label)) },
+                value = textF,
+                shape = RoundedCornerShape(8.dp),
+                onValueChange = {
+                    coroutine.launch {
+                        if (it.text.isEmpty()) {
+                            onValueChange("")
+                            textF = it
+                        } else {
+                            onValueChange(it.text)
+                            textF = it
+                        }
                     }
-                }
-            },
-            modifier = Modifier
-                .focusRequester(focusRequester)
-                .padding(
-                    bottom = 8.dp
-                )
-                .fillMaxWidth(0.95f),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    keyboardController?.hide()
-                }
-            ),
-            trailingIcon = {
-                IconButton(
-                    onClick = {
-                        vm.posibleFlights(textF.text)
-                        textF = TextFieldValue("")
-                        onValueChange("")
-                        navigate.invoke()
-                    }
-                )
-                {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "Search"
+                },
+                modifier = Modifier
+                    .focusRequester(focusRequester)
+                    .padding(
+                        top = 8.dp,
+                        bottom = 8.dp
                     )
-                }
-            },
-            maxLines = 1,
-            singleLine = true
-        )
+                    .fillMaxWidth(0.95f),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        keyboardController?.hide()
+                    }
+                ),
+                trailingIcon = {
+                    IconButton(
+                        onClick = {
+                            vm.posibleFlights(textF.text)
+                            textF = TextFieldValue("")
+                            onValueChange("")
+                            Log.d("ICONBUTTON", "TEST")
+                            navigate.invoke()
+                            Log.d("ICONBUTTON", "TEST")
+                        }
+                    )
+                    {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "Search"
+                        )
+                    }
+                },
+                maxLines = 1,
+                singleLine = true
+            )
+        }
 
-        Scaffold (
-            content = {
-                it
-                Box {
-                    if (optionsList.isNotEmpty()) {
-                        LazyColumn(
-                            state = rememberLazyListState(),
-                            modifier = Modifier
-                                .padding(16.dp)
-                        ) {
-                            items(optionsList) {
-                                Surface(
-                                    onClick = {
-                                        textF = TextFieldValue(
-                                            text = "${it.first} - ${it.second}",
-                                            selection = TextRange("${it.first} - ${it.second}".length)
-                                        )
-                                    }
-                                ) {
-                                    Text(
-                                        text = "${it.first} - ${it.second}"
-                                    )
-                                }
+        /*Row(modifier = Modifier) {*/
+        if (optionsList.isNotEmpty()) {
+
+                LazyColumn {
+                    items(optionsList) {
+                        Surface(
+                            onClick = {
+                                textF = TextFieldValue(
+                                    text = "${it.first} - ${it.second}",
+                                    selection = TextRange("${it.first} - ${it.second}".length)
+                                )
                             }
+                        ) {
+                            Text(
+                                text = "${it.first} - ${it.second}"
+                            )
                         }
                     }
                 }
-                if (optionsList.isEmpty()) {
-                    FlightCardsList(
-                        flightList = posibleFlights,
-                        flightStates = iconStates,
-                        vm = vm
-                    )
-                }
             }
-        )
+        /*}*/
     }
 }
 

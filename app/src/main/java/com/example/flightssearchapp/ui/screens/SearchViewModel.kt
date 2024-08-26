@@ -1,10 +1,11 @@
 package com.example.flightssearchapp.ui.screens
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -20,8 +21,8 @@ import com.example.flightssearchapp.repositories.FavoriteRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
@@ -41,8 +42,14 @@ class SearchViewModel(
 
     fun updateState(ind: Int) {
         viewModelScope.launch {
-            posibleFlightsList[ind].likeState = !posibleFlightsList[ind].likeState
-            posibleFlightsList = posibleFlightsList
+            val updatedList = posibleFlightsList.toMutableList()
+            val index = updatedList.indexOf(posibleFlightsList[ind])
+            Log.d("UPDATED LIST BEFORE", updatedList.toString())
+            updatedList[index].likeState = !updatedList[index].likeState
+            Log.d("UPDATED LIST AFTER", updatedList.toString())
+            /*posibleFlightsList.value[ind].likeState = !posibleFlightsList.value[ind].likeState*/
+            /*posibleFlightsList[ind].likeState = !posibleFlightsList[ind].likeState*/
+            posibleFlightsList = updatedList
         }
     }
 
@@ -102,7 +109,7 @@ class SearchViewModel(
         viewModelScope.launch {
             var flightsList = listOf<Any>()
             var airport: Airport = Airport(0,"","",0)
-            var posibleFlights: MutableList<Flight> = mutableListOf()
+            val posibleFlights: MutableList<Flight> = mutableListOf()
             var fStates: MutableList<Boolean> = mutableListOf()
             var searchSplit = search.split(" - ")
 
@@ -131,7 +138,9 @@ class SearchViewModel(
 
             }
             flightStates = fStates
+            Log.d("DEBUG", posibleFlightsList.toString())
             posibleFlightsList = posibleFlights
+            Log.d("DEBUG", posibleFlightsList.toString())
         }
     }
 

@@ -10,10 +10,12 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,13 +29,45 @@ import com.example.flightssearchapp.ui.screens.SearchViewModel
 fun FlightCardsList(
     flightList: MutableList<Flight>,
     flightStates: MutableList<Boolean>,
-    vm: SearchViewModel
+    vm: SearchViewModel,
+    modifier: Modifier
 ) {
-    LazyColumn {
-        itemsIndexed(flightList) {index, flight ->
-            FlightCard(flight = flight, vm = vm)
-        }
-    }
+
+            LazyColumn(
+                modifier = modifier
+            ) {
+                itemsIndexed(flightList) { index, flight ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(2.dp)
+                            .border(1.dp, Color.LightGray, RectangleShape)
+                    ) {
+                        Column {
+                            Text(text = flight.departure.iataCode)
+                            Text(text = flight.departure.name)
+                            Text(text = flight.arrive.iataCode)
+                            Text(text = flight.arrive.name)
+                        }
+                        IconButton(
+                            onClick = { vm.updateState(flight.id) },
+                            modifier = Modifier.fillMaxWidth(0.5f)
+                        ) {
+                            if (flight.likeState) {
+                                Icon(
+                                    imageVector = Icons.Filled.Favorite,
+                                    contentDescription = null
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Outlined.FavoriteBorder,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    }
+                }
+            }
 }
 
 @Composable
@@ -69,7 +103,6 @@ fun FlightCard(
                 )
             }
         }
-
     }
 }
 
@@ -82,13 +115,12 @@ fun FlightCardState(
         onClick = changeState,
         modifier = Modifier.fillMaxWidth(0.5f)
     ) {
-        if(flightState) {
+        if (flightState) {
             Icon(
                 imageVector = Icons.Filled.Favorite,
                 contentDescription = null
             )
-        }
-        else {
+        } else {
             Icon(
                 imageVector = Icons.Outlined.FavoriteBorder,
                 contentDescription = null
