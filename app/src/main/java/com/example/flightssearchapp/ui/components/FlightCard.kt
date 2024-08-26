@@ -40,7 +40,7 @@ fun FlightCardsList(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(2.dp)
+                            .padding(8.dp)
                             .border(1.dp, Color.LightGray, RectangleShape)
                     ) {
                         Column {
@@ -75,9 +75,10 @@ fun FlightCard(
     flight: Flight,
     vm: SearchViewModel
 ) {
-    Row(modifier = Modifier
+    Row(
+        modifier = Modifier
         .fillMaxWidth()
-        .padding(2.dp)
+        /*.padding(2.dp)*/
         .border(1.dp, Color.LightGray, RectangleShape)
     ) {
         Column {

@@ -91,68 +91,78 @@ fun SearchForm(
     Column(
         verticalArrangement = Arrangement.Top,
         /*horizontalAlignment = Alignment.CenterHorizontally*/
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Spacer(modifier = Modifier.height(40.dp))
-        Row(modifier = Modifier) {
-            OutlinedTextField(
-                label = { Text(text = stringResource(label)) },
-                value = textF,
-                shape = RoundedCornerShape(8.dp),
-                onValueChange = {
-                    coroutine.launch {
-                        if (it.text.isEmpty()) {
-                            onValueChange("")
-                            textF = it
-                        } else {
-                            onValueChange(it.text)
-                            textF = it
+        Column(
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Spacer(modifier = Modifier.height(40.dp))
+            Row(modifier = Modifier) {
+                OutlinedTextField(
+                    label = { Text(text = stringResource(label)) },
+                    value = textF,
+                    shape = RoundedCornerShape(8.dp),
+                    onValueChange = {
+                        coroutine.launch {
+                            if (it.text.isEmpty()) {
+                                onValueChange("")
+                                textF = it
+                            } else {
+                                onValueChange(it.text)
+                                textF = it
+                            }
                         }
-                    }
-                },
-                modifier = Modifier
-                    .focusRequester(focusRequester)
-                    .padding(
-                        top = 8.dp,
-                        bottom = 8.dp
-                    )
-                    .fillMaxWidth(0.95f),
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        keyboardController?.hide()
-                    }
-                ),
-                trailingIcon = {
-                    IconButton(
-                        onClick = {
-                            vm.posibleFlights(textF.text)
-                            textF = TextFieldValue("")
-                            onValueChange("")
-                            Log.d("ICONBUTTON", "TEST")
-                            navigate.invoke()
-                            Log.d("ICONBUTTON", "TEST")
-                        }
-                    )
-                    {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = "Search"
+                    },
+                    modifier = Modifier
+                        .focusRequester(focusRequester)
+                        .padding(
+                            top = 8.dp,
+                            bottom = 8.dp
                         )
-                    }
-                },
-                maxLines = 1,
-                singleLine = true
-            )
+                        .fillMaxWidth(0.95f),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            keyboardController?.hide()
+                        }
+                    ),
+                    trailingIcon = {
+                        IconButton(
+                            onClick = {
+                                vm.posibleFlights(textF.text)
+                                textF = TextFieldValue("")
+                                onValueChange("")
+                                Log.d("ICONBUTTON", "TEST")
+                                navigate.invoke()
+                                Log.d("ICONBUTTON", "TEST")
+                            }
+                        )
+                        {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = "Search"
+                            )
+                        }
+                    },
+                    maxLines = 1,
+                    singleLine = true
+                )
+            }
         }
 
         /*Row(modifier = Modifier) {*/
         if (optionsList.isNotEmpty()) {
 
-                LazyColumn {
+                LazyColumn(
+                    modifier = Modifier.padding(
+                        start = 16.dp,
+                        end = 16.dp
+                    )
+                ) {
                     items(optionsList) {
                         Surface(
                             onClick = {
