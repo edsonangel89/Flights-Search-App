@@ -3,9 +3,13 @@ package com.example.flightssearchapp.ui
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -19,6 +23,7 @@ import com.example.flightssearchapp.ui.screens.FlightResults
 import com.example.flightssearchapp.ui.screens.SearchScreen
 import com.example.flightssearchapp.ui.screens.SearchViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FlightsApp(
     vm: SearchViewModel = viewModel(factory = SearchViewModel.factory),
@@ -44,9 +49,14 @@ fun FlightsApp(
         composable("flights") {
             Scaffold (
                 topBar = {
-                    IconButton(onClick = { navController.navigate("home") }) {
-                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
-                    }
+                    CenterAlignedTopAppBar(
+                        title = {},
+                        navigationIcon = {
+                            IconButton(onClick = { navController.navigate("home") }) {
+                                Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
+                            }
+                        }
+                    )
                 },
                 content = {
                     it
@@ -56,8 +66,8 @@ fun FlightsApp(
                         vm = vm,
                         modifier = modifier.padding(it)
                     )
-                },
-                modifier = Modifier.padding(8.dp)
+                }/*,
+                modifier = Modifier.padding(8.dp)*/
             )
         }
     }
