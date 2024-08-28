@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
+import com.example.flightssearchapp.models.Favorite
 import com.example.flightssearchapp.models.Flight
 import com.example.flightssearchapp.ui.screens.SearchViewModel
 
@@ -37,49 +38,52 @@ fun FlightCardsList(
     vm: SearchViewModel,
     modifier: Modifier
 ) {
-
-            LazyColumn(
-                modifier = modifier
+    LazyColumn(
+        modifier = modifier
+    ) {
+        itemsIndexed(flightList) { index, flight ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .border(1.dp, Color.LightGray, RectangleShape)
             ) {
-                itemsIndexed(flightList) { index, flight ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp)
-                                .border(1.dp, Color.LightGray, RectangleShape)
-                        ) {
-                            Column (
-                                modifier = Modifier.fillMaxWidth(0.7f)
-                            ){
-                                Text(text = flight.departure.iataCode)
-                                Text(text = flight.departure.name)
-                                Text(text = flight.arrive.iataCode)
-                                Text(text = flight.arrive.name)
-                            }
-                            Column (
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.fillMaxSize()
-                            ){
-                                IconButton(
-                                    onClick = { vm.updateState(flight.id) }
-                                ) {
-                                    if (flight.likeState) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Favorite,
-                                            contentDescription = null
-                                        )
-                                    } else {
-                                        Icon(
-                                            imageVector = Icons.Outlined.FavoriteBorder,
-                                            contentDescription = null
-                                        )
-                                    }
-                                }
-                            }
+                Column (
+                    modifier = Modifier.fillMaxWidth(0.7f)
+                ){
+                    Text(text = flight.departure.iataCode)
+                    /*Text(text = flight.departure.name)*/
+                    Text(text = flight.arrive.iataCode)
+                    /*Text(text = flight.arrive.name)*/
+                }
+                Column (
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxSize()
+                ){
+                    IconButton(
+                        onClick = {
+                            val favorite = Favorite(flight.id, flight.departure.iataCode, flight.arrive.iataCode)
+                            vm.updateFavorite(favorite)
+                            vm.updateState(flight.id)
                         }
+                    ) {
+                        if (flight.likeState) {
+                            Icon(
+                                imageVector = Icons.Filled.Favorite,
+                                contentDescription = null
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Outlined.FavoriteBorder,
+                                contentDescription = null
+                            )
+                        }
+                    }
                 }
             }
+        }
+    }
 }
 
 @Composable

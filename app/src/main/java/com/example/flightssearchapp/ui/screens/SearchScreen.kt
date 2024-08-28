@@ -27,6 +27,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -87,6 +88,7 @@ fun SearchForm(
     val keyboardController = LocalSoftwareKeyboardController.current
     var posibleFlights = vm.posibleFlightsList
     var iconStates by remember { mutableStateOf(vm.flightStates) }
+    var favList = vm.favList.collectAsState()
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -153,10 +155,8 @@ fun SearchForm(
                 )
             }
         }
-
         /*Row(modifier = Modifier) {*/
         if (optionsList.isNotEmpty()) {
-
                 LazyColumn(
                     modifier = Modifier.padding(
                         start = 16.dp,
@@ -179,6 +179,29 @@ fun SearchForm(
                     }
                 }
             }
+        else {
+            if(favList.value.isNotEmpty()) {
+                LazyColumn{
+                    items(favList.value) {
+                        Surface {
+                            Row {
+                                Text(text = it.departure)
+                                Text(text = it.destination)
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(text = "No hay favoritos")
+                }
+            }
+        }
         /*}*/
     }
 }

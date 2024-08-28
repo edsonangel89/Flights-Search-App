@@ -40,6 +40,9 @@ class SearchViewModel(
 
     var flightStates: MutableList<Boolean> = mutableListOf()
 
+    private val _favList = MutableStateFlow(listOf<Favorite>())
+    val favList = _favList.asStateFlow()
+
     fun updateState(ind: Int) {
         viewModelScope.launch {
             val updatedList = posibleFlightsList.toMutableList()
@@ -60,6 +63,12 @@ class SearchViewModel(
             airportRepository.getAllAirports().forEach {
                 airportListLocal.add(Pair(it.iataCode,it.name))
                 airportCompleteList.add(it)
+            }
+            try {
+                _favList.value = favoriteRepository.getAllFavorites()
+            }
+            catch (e: Exception) {
+
             }
         }
     }
@@ -144,11 +153,15 @@ class SearchViewModel(
         }
     }
 
-    fun getFavorites(): Flow<List<Favorite>> = favoriteRepository.getAllFavorites()
-
-    fun insertFavorite(favorite: Favorite) =
+    fun updateFavorite(favorite: Favorite) =
         viewModelScope.launch {
-            favoriteRepository.insertFavorite(favorite)
+            try {
+                favoriteRepository.insertFavorite(favorite)
+            }
+            catch (e: Exception) {
+
+            }
+
         }
 
     companion object {
