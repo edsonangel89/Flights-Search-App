@@ -43,6 +43,8 @@ fun FlightCardsList(
     ) {
         itemsIndexed(flightList) { index, flight ->
             Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
@@ -50,11 +52,12 @@ fun FlightCardsList(
             ) {
                 Column (
                     modifier = Modifier.fillMaxWidth(0.7f)
+                        .padding(4.dp)
                 ){
                     Text(text = flight.departure.iataCode)
-                    /*Text(text = flight.departure.name)*/
+                    Text(text = flight.departure.name)
                     Text(text = flight.arrive.iataCode)
-                    /*Text(text = flight.arrive.name)*/
+                    Text(text = flight.arrive.name)
                 }
                 Column (
                     verticalArrangement = Arrangement.Center,

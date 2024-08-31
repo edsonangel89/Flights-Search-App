@@ -2,6 +2,7 @@ package com.example.flightssearchapp.ui.screens
 
 import android.util.Log
 import androidx.annotation.StringRes
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -37,6 +39,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
@@ -181,12 +185,43 @@ fun SearchForm(
             }
         else {
             if(favList.value.isNotEmpty()) {
-                LazyColumn{
+                LazyColumn (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(4.dp)
+                ){
                     items(favList.value) {
-                        Surface {
-                            Row {
-                                Text(text = it.departure)
-                                Text(text = it.destination)
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                                .border(1.dp, Color.LightGray, RectangleShape)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Column (
+                                    modifier = Modifier.fillMaxWidth(0.7f)
+                                ){
+                                    Text(text = "Departure")
+                                    Text(text = it.departure)
+                                    Text(text = "Destination")
+                                    Text(text = it.destination)
+                                }
+                                Column (
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.fillMaxSize()
+                                ){
+                                    IconButton(
+                                        onClick = { /*TODO*/ },
+                                        modifier = Modifier.fillMaxSize()
+                                    ) {
+                                        Icon(imageVector = Icons.Outlined.Delete, contentDescription = null)
+                                    }
+                                }
                             }
                         }
                     }
