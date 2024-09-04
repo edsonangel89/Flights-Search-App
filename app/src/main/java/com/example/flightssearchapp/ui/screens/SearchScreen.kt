@@ -92,7 +92,7 @@ fun SearchForm(
     val keyboardController = LocalSoftwareKeyboardController.current
     var posibleFlights = vm.posibleFlightsList
     var iconStates by remember { mutableStateOf(vm.flightStates) }
-    var favList = vm.favList.collectAsState()
+    var favList = vm._favList.value
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -184,13 +184,13 @@ fun SearchForm(
                 }
             }
         else {
-            if(favList.value.isNotEmpty()) {
+            if(favList.isNotEmpty()) {
                 LazyColumn (
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(4.dp)
                 ){
-                    items(favList.value) {
+                    items(favList) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()

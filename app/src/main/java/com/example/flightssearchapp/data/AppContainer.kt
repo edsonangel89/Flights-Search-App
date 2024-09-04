@@ -17,5 +17,4 @@ class AppDataContainer(private val context: Context) : AppContainer {
 
     override val favoriteRepository: FavoriteRepository = OfflineFavoriteRepository(FlightsSearchAppDatabase.getDatabase(context).favoriteDao())
 
-
 }

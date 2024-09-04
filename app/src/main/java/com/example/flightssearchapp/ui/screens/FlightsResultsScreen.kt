@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.flightssearchapp.models.Flight
 import com.example.flightssearchapp.ui.components.FlightCardsList
+import kotlinx.coroutines.flow.asFlow
 
 @Composable
 fun FlightResults(

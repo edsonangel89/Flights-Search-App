@@ -1,5 +1,6 @@
 package com.example.flightssearchapp.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -66,9 +67,14 @@ fun FlightCardsList(
                 ){
                     IconButton(
                         onClick = {
-                            val favorite = Favorite(flight.id, flight.departure.iataCode, flight.arrive.iataCode)
-                            vm.updateFavorite(favorite)
+                            Log.d("ONCLICK", "TEST")
                             vm.updateState(flight.id)
+                            Log.d("ONCLICK", "TEST")
+                            val favorite = Favorite(vm._favList.value.size + 1, flight.departure.iataCode, flight.arrive.iataCode)
+                            Log.d("ONCLICK", "TEST")
+                            Log.d("FLIGHT ID", vm._favList.value.size.plus(1).toString())
+                            vm.updateFavorite(favorite)
+                            Log.d("ONCLICK", "TEST")
                         }
                     ) {
                         if (flight.likeState) {

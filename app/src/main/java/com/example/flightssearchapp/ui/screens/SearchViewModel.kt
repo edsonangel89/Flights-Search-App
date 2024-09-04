@@ -40,13 +40,17 @@ class SearchViewModel(
 
     var flightStates: MutableList<Boolean> = mutableListOf()
 
-    private val _favList = MutableStateFlow(listOf<Favorite>())
-    val favList = _favList.asStateFlow()
+    var _favList = mutableStateOf(listOf<Favorite>())
+
+    /*private val _favList = MutableStateFlow(listOf<Favorite>())
+    val favList = _favList.asStateFlow()*/
 
     fun updateState(ind: Int) {
         viewModelScope.launch {
-            val updatedList = posibleFlightsList.toMutableList()
-            val index = updatedList.indexOf(posibleFlightsList[ind])
+            Log.d("POSIBLE FLIGHTS LIST", posibleFlightsList.size.toString())
+            var updatedList = posibleFlightsList.toMutableList()
+            Log.d("INT", ind.toString())
+            var index = updatedList.indexOf(posibleFlightsList[ind])
             Log.d("UPDATED LIST BEFORE", updatedList.toString())
             updatedList[index].likeState = !updatedList[index].likeState
             Log.d("UPDATED LIST AFTER", updatedList.toString())
@@ -56,18 +60,17 @@ class SearchViewModel(
         }
     }
 
-    var id: Int = 0
-
     init {
         viewModelScope.launch {
             airportRepository.getAllAirports().forEach {
-                airportListLocal.add(Pair(it.iataCode,it.name))
+                airportListLocal.add(Pair(it.iataCode, it.name))
                 airportCompleteList.add(it)
             }
             try {
                 _favList.value = favoriteRepository.getAllFavorites()
-            }
-            catch (e: Exception) {
+                Log.d("FAVLIST", _favList.value.toString())
+                Log.d("POSIBLE FLIGHTS", posibleFlightsList.toString())
+            } catch (e: Exception) {
 
             }
         }
@@ -77,15 +80,15 @@ class SearchViewModel(
         airId = aId
     }
 
-    fun getAirports(search: String) =
+    fun getAirports(search: String) {
         viewModelScope.launch {
-            if(search.isBlank()) {
+            if (search.isBlank()) {
                 airportSearches = emptyList()
-            }
-            else {
+            } else {
                 airportSearches = searchLocal(search, airportListLocal)
             }
         }
+    }
 
     fun searchLocal(search: String,list: List<Pair<String, String>>): List<Pair<String, String>> {
         var searchList = mutableListOf<Pair<String, String>>()
@@ -116,11 +119,13 @@ class SearchViewModel(
 
     fun posibleFlights(search: String) {
         viewModelScope.launch {
+            posibleFlightsList = emptyList<Flight>().toMutableList()
             var flightsList = listOf<Any>()
             var airport: Airport = Airport(0,"","",0)
             val posibleFlights: MutableList<Flight> = mutableListOf()
             var fStates: MutableList<Boolean> = mutableListOf()
             var searchSplit = search.split(" - ")
+            var id = 0
 
             if(searchSplit.size == 2 || searchSplit.size == 3) {
                 var search1 = searchSplit[0]
@@ -136,9 +141,15 @@ class SearchViewModel(
                 flightsList = airportCompleteList.filterNot {
                     it.iataCode == search1
                 }
-                flightsList.forEach {
-                    val flight = Flight(id = id, departure = airport, arrive = it)
+                flightsList.forEach { arrAir ->
+                    var flight = Flight(id = id, departure = airport, arrive = arrAir)
+                    _favList.value.forEach{ fav ->
+                        if (fav.departure == flight.departure.iataCode && fav.destination == flight.arrive.iataCode) {
+                            flight.likeState = true
+                        }
+                    }
                     posibleFlights.add(flight)
+                    Log.d("POSIBLE FLIGHTS", posibleFlights.size.toString())
                     flightStates.add(flight.likeState)
                     id++
                 }
@@ -147,33 +158,36 @@ class SearchViewModel(
 
             }
             flightStates = fStates
-            Log.d("DEBUG", posibleFlightsList.toString())
+            Log.d("DEBUG", posibleFlightsList.size.toString())
             posibleFlightsList = posibleFlights
-            Log.d("DEBUG", posibleFlightsList.toString())
+            Log.d("FAVLIST", _favList.value.toString())
+            Log.d("POSIBLE FLIGHTS", posibleFlightsList.toString())
+            Log.d("DEBUG", posibleFlightsList.size.toString())
         }
     }
 
-    fun updateFavorite(favorite: Favorite) =
+    fun updateFavorite(favorite: Favorite) {
         viewModelScope.launch {
             try {
                 favoriteRepository.insertFavorite(favorite)
+                _favList.value = favoriteRepository.getAllFavorites()
             }
             catch (e: Exception) {
-
+                Log.d("UPDATE FAVORITE EXCEPTION", "EXCEPTION")
             }
-
         }
+    }
 
     companion object {
          val factory: ViewModelProvider.Factory =
-             viewModelFactory {
-                 initializer {
-                     val application = (this[APPLICATION_KEY] as FlightsApplication)
-                     val airportRepository = application.container.airportRepository
-                     val favoriteRepository = application.container.favoriteRepository
-                     SearchViewModel(airportRepository, favoriteRepository)
-                 }
+         viewModelFactory {
+             initializer {
+                 val application = (this[APPLICATION_KEY] as FlightsApplication)
+                 val airportRepository = application.container.airportRepository
+                 val favoriteRepository = application.container.favoriteRepository
+                 SearchViewModel(airportRepository, favoriteRepository)
              }
+         }
     }
 
 }
