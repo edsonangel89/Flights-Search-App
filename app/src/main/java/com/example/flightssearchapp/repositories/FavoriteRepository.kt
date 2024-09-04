@@ -9,4 +9,6 @@ interface FavoriteRepository {
 
     suspend fun insertFavorite(favorite: Favorite)
 
+    suspend fun deleteFavorite(favorite: Favorite)
+
 }

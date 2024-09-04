@@ -216,7 +216,9 @@ fun SearchForm(
                                     modifier = Modifier.fillMaxSize()
                                 ){
                                     IconButton(
-                                        onClick = { /*TODO*/ },
+                                        onClick = {
+                                            vm.deleteFavorite(it)
+                                        },
                                         modifier = Modifier.fillMaxSize()
                                     ) {
                                         Icon(imageVector = Icons.Outlined.Delete, contentDescription = null)

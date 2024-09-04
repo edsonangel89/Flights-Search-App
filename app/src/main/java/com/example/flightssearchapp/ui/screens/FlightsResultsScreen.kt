@@ -20,7 +20,7 @@ fun FlightResults(
     navHostController: NavHostController,
     modifier: Modifier
 ) {
-    var posibleFlights = vm.posibleFlightsList
+    var posibleFlights = vm.posibleFlightsList.value
     var iconStates by remember { mutableStateOf(vm.flightStates) }
 
     if (optionsList.isNotEmpty()) {

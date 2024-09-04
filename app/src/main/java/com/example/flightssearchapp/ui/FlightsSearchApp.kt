@@ -68,7 +68,7 @@ fun FlightsApp(
                 content = {
                     it
                     FlightResults(
-                        optionsList = vm.posibleFlightsList,
+                        optionsList = vm.posibleFlightsList.value,
                         navHostController = navController,
                         vm = vm,
                         modifier = modifier.padding(it)

@@ -10,4 +10,6 @@ class OfflineFavoriteRepository(private val favoriteDao: FavoriteDao) : Favorite
 
     override suspend fun insertFavorite(favorite: Favorite) = favoriteDao.insertFavorite(favorite)
 
+    override suspend fun deleteFavorite(favorite: Favorite) = favoriteDao.deleteFavorite(favorite)
+
 }

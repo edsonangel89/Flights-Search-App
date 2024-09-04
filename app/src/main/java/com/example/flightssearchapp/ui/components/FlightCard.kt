@@ -70,7 +70,7 @@ fun FlightCardsList(
                             Log.d("ONCLICK", "TEST")
                             vm.updateState(flight.id)
                             Log.d("ONCLICK", "TEST")
-                            val favorite = Favorite(vm._favList.value.size + 1, flight.departure.iataCode, flight.arrive.iataCode)
+                            val favorite = Favorite(departure = flight.departure.iataCode, destination =  flight.arrive.iataCode)
                             Log.d("ONCLICK", "TEST")
                             Log.d("FLIGHT ID", vm._favList.value.size.plus(1).toString())
                             vm.updateFavorite(favorite)

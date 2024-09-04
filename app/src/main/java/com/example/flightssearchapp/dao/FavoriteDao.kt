@@ -1,6 +1,7 @@
 package com.example.flightssearchapp.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.flightssearchapp.models.Favorite
@@ -14,5 +15,8 @@ interface FavoriteDao {
 
     @Insert
     suspend fun insertFavorite(favorite: Favorite)
+
+    @Delete
+    suspend fun deleteFavorite(favorite: Favorite)
 
 }

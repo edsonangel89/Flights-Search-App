@@ -36,7 +36,9 @@ class SearchViewModel(
     var airportListLocal: MutableList<Pair<String, String>> = mutableListOf()
     var airportSearches: List<Pair<String, String>> = mutableListOf()
 
-    var posibleFlightsList: MutableList<Flight> = mutableListOf()
+    /*var posibleFlightsList: MutableList<Flight> = mutableListOf()*/
+
+    var posibleFlightsList = mutableStateOf(mutableListOf<Flight>())
 
     var flightStates: MutableList<Boolean> = mutableListOf()
 
@@ -47,12 +49,12 @@ class SearchViewModel(
 
     fun updateState(ind: Int) {
         viewModelScope.launch {
-            Log.d("POSIBLE FLIGHTS LIST", posibleFlightsList.size.toString())
-            var updatedList = posibleFlightsList.toMutableList()
+            Log.d("POSIBLE FLIGHTS LIST", posibleFlightsList.value.size.toString())
+            var updatedList = posibleFlightsList
             Log.d("INT", ind.toString())
-            var index = updatedList.indexOf(posibleFlightsList[ind])
+            var index = updatedList.value.indexOf(posibleFlightsList.value[ind])
             Log.d("UPDATED LIST BEFORE", updatedList.toString())
-            updatedList[index].likeState = !updatedList[index].likeState
+            updatedList.value[index].likeState = !updatedList.value[index].likeState
             Log.d("UPDATED LIST AFTER", updatedList.toString())
             /*posibleFlightsList.value[ind].likeState = !posibleFlightsList.value[ind].likeState*/
             /*posibleFlightsList[ind].likeState = !posibleFlightsList[ind].likeState*/
@@ -119,7 +121,7 @@ class SearchViewModel(
 
     fun posibleFlights(search: String) {
         viewModelScope.launch {
-            posibleFlightsList = emptyList<Flight>().toMutableList()
+            /*posibleFlightsList = emptyList<Flight>().toMutableList()*/
             var flightsList = listOf<Any>()
             var airport: Airport = Airport(0,"","",0)
             val posibleFlights: MutableList<Flight> = mutableListOf()
@@ -158,22 +160,34 @@ class SearchViewModel(
 
             }
             flightStates = fStates
-            Log.d("DEBUG", posibleFlightsList.size.toString())
-            posibleFlightsList = posibleFlights
+            Log.d("DEBUG", posibleFlightsList.value.size.toString())
+            posibleFlightsList.value = posibleFlights
             Log.d("FAVLIST", _favList.value.toString())
             Log.d("POSIBLE FLIGHTS", posibleFlightsList.toString())
-            Log.d("DEBUG", posibleFlightsList.size.toString())
+            Log.d("DEBUG", posibleFlightsList.value.size.toString())
         }
     }
 
     fun updateFavorite(favorite: Favorite) {
         viewModelScope.launch {
-            try {
+            /*try {*/
                 favoriteRepository.insertFavorite(favorite)
+                _favList.value = favoriteRepository.getAllFavorites()
+            /*}*/
+            /*catch (e: Exception) {*/
+                Log.d("UPDATE FAVORITE EXCEPTION", "EXCEPTION")
+            /*}*/
+        }
+    }
+
+    fun deleteFavorite(favorite: Favorite) {
+        viewModelScope.launch {
+            try {
+                favoriteRepository.deleteFavorite(favorite)
                 _favList.value = favoriteRepository.getAllFavorites()
             }
             catch (e: Exception) {
-                Log.d("UPDATE FAVORITE EXCEPTION", "EXCEPTION")
+                Log.d("DELETE FAVORITE", "FAILED FAVORITE")
             }
         }
     }
