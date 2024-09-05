@@ -50,15 +50,15 @@ class SearchViewModel(
     fun updateState(ind: Int) {
         viewModelScope.launch {
             Log.d("POSIBLE FLIGHTS LIST", posibleFlightsList.value.size.toString())
-            var updatedList = posibleFlightsList
+            var updatedList = posibleFlightsList.value
             Log.d("INT", ind.toString())
-            var index = updatedList.value.indexOf(posibleFlightsList.value[ind])
+            var index = updatedList.indexOf(posibleFlightsList.value[ind])
             Log.d("UPDATED LIST BEFORE", updatedList.toString())
-            updatedList.value[index].likeState = !updatedList.value[index].likeState
+            updatedList[index].likeState.value = !updatedList[index].likeState.value
             Log.d("UPDATED LIST AFTER", updatedList.toString())
             /*posibleFlightsList.value[ind].likeState = !posibleFlightsList.value[ind].likeState*/
             /*posibleFlightsList[ind].likeState = !posibleFlightsList[ind].likeState*/
-            posibleFlightsList = updatedList
+            posibleFlightsList.value = updatedList
         }
     }
 
@@ -124,7 +124,7 @@ class SearchViewModel(
             /*posibleFlightsList = emptyList<Flight>().toMutableList()*/
             var flightsList = listOf<Any>()
             var airport: Airport = Airport(0,"","",0)
-            val posibleFlights: MutableList<Flight> = mutableListOf()
+            val posibleFlights = mutableStateOf(mutableListOf<Flight>())
             var fStates: MutableList<Boolean> = mutableListOf()
             var searchSplit = search.split(" - ")
             var id = 0
@@ -147,12 +147,13 @@ class SearchViewModel(
                     var flight = Flight(id = id, departure = airport, arrive = arrAir)
                     _favList.value.forEach{ fav ->
                         if (fav.departure == flight.departure.iataCode && fav.destination == flight.arrive.iataCode) {
-                            flight.likeState = true
+                            flight.likeState.value = true
                         }
                     }
-                    posibleFlights.add(flight)
-                    Log.d("POSIBLE FLIGHTS", posibleFlights.size.toString())
-                    flightStates.add(flight.likeState)
+                    posibleFlightsList.value.add(flight)
+                    posibleFlights.value.add(flight)
+                    Log.d("POSIBLE FLIGHTS", posibleFlights.value.size.toString())
+                    flightStates.add(flight.likeState.value)
                     id++
                 }
             }
@@ -161,7 +162,7 @@ class SearchViewModel(
             }
             flightStates = fStates
             Log.d("DEBUG", posibleFlightsList.value.size.toString())
-            posibleFlightsList.value = posibleFlights
+            posibleFlightsList.value = posibleFlightsList.value
             Log.d("FAVLIST", _favList.value.toString())
             Log.d("POSIBLE FLIGHTS", posibleFlightsList.toString())
             Log.d("DEBUG", posibleFlightsList.value.size.toString())
@@ -170,13 +171,13 @@ class SearchViewModel(
 
     fun updateFavorite(favorite: Favorite) {
         viewModelScope.launch {
-            /*try {*/
+            try {
                 favoriteRepository.insertFavorite(favorite)
                 _favList.value = favoriteRepository.getAllFavorites()
-            /*}*/
-            /*catch (e: Exception) {*/
+            }
+            catch (e: Exception) {
                 Log.d("UPDATE FAVORITE EXCEPTION", "EXCEPTION")
-            /*}*/
+            }
         }
     }
 
