@@ -128,6 +128,7 @@ class SearchViewModel(
             var fStates: MutableList<Boolean> = mutableListOf()
             var searchSplit = search.split(" - ")
             var id = 0
+            posibleFlightsList.value = mutableListOf()
 
             if(searchSplit.size == 2 || searchSplit.size == 3) {
                 var search1 = searchSplit[0]
@@ -152,7 +153,7 @@ class SearchViewModel(
                     }
                     posibleFlightsList.value.add(flight)
                     posibleFlights.value.add(flight)
-                    Log.d("POSIBLE FLIGHTS", posibleFlights.value.size.toString())
+                    /*Log.d("POSIBLE FLIGHTS", posibleFlights.value.size.toString())*/
                     flightStates.add(flight.likeState.value)
                     id++
                 }
@@ -189,6 +190,21 @@ class SearchViewModel(
             }
             catch (e: Exception) {
                 Log.d("DELETE FAVORITE", "FAILED FAVORITE")
+            }
+        }
+    }
+
+    fun deleteFavoriteByFlight(flight: Flight) {
+        viewModelScope.launch {
+            try {
+                _favList.value.forEach {
+                    if ((it.departure == flight.departure.iataCode) && (it.destination == flight.arrive.iataCode)) {
+                        deleteFavorite(it)
+                    }
+                }
+            }
+            catch (e: Exception) {
+
             }
         }
     }

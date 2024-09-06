@@ -93,7 +93,7 @@ fun FlightCardsList(
                                 vm.updateState(flight.id)
                                 val favorite = Favorite(departure = flight.departure.iataCode, destination = flight.arrive.iataCode)
                                 /*vm.updateFavorite(favorite)*/
-                                vm.deleteFavorite(favorite)
+                                vm.deleteFavoriteByFlight(flight)
                                 vm.posibleFlightsList.value = posibleFlights
                             }
                         ) {
@@ -105,22 +105,17 @@ fun FlightCardsList(
                     } else {
                         IconButton(
                             onClick = {
-                                Log.d("ONCLICK", "TEST")
                                 vm.updateState(flight.id)
-                                Log.d("ONCLICK", "TEST")
                                 val favorite = Favorite(departure = flight.departure.iataCode, destination = flight.arrive.iataCode)
-                                Log.d("ONCLICK", "TEST")
-                                Log.d("FLIGHT ID", vm._favList.value.size.plus(1).toString())
                                 vm.updateFavorite(favorite)
                                 vm.posibleFlightsList.value = posibleFlights
-                                Log.d("ONCLICK", "TEST")
                             }
                         ) {
-                        Icon(
-                            imageVector = Icons.Outlined.FavoriteBorder,
-                            contentDescription = null
-                        )
-                    }
+                            Icon(
+                                imageVector = Icons.Outlined.FavoriteBorder,
+                                contentDescription = null
+                            )
+                        }
                     }
                 }
             }
